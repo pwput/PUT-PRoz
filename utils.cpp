@@ -58,7 +58,7 @@ void sendPacket(int destination, int tag)
 void sendPacketToAll(int tag){
     for (int i = 0; i < processData.size; ++i) {
         if (i!=processData.rank)
-            sendPacket(i,GnomMessage::REQ_AGRAFKA);
+            sendPacket(i, tag);
     }
 
 }

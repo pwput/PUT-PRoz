@@ -24,15 +24,16 @@ enum State{
     WAITING_CELOWNIK //gnom
 };
 
-enum GnomMessage{
-    REQ_AGRAFKA,
+enum Message{
+    REQ_AGRAFKA = 0,
     ACK_AGRAFKA,
     REQ_CELOWNIK,
     ACK_CELOWNIK,
+    ACK_BRON
 };
 
 enum SkrzatMessage{
-    REQ_BRON,
+    REQ_BRON = 10,
     RELEASE_AGRAFKA,
     RELEASE_CELOWNIK,
 };

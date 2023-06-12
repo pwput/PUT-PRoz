@@ -29,6 +29,7 @@ public:
     ProcessType processType;
     State state;
 
+    int existingBronCount;
     int rank;
     int size;
     int lamportTime;
