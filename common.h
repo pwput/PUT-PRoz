@@ -5,6 +5,8 @@
 #ifndef OMMON_H
 #define OMMON_H
 
+#include <string>
+
 typedef struct {
     int lamportTime;
     bool hasAgrafka;
@@ -29,15 +31,22 @@ enum Message{
     ACK_AGRAFKA,
     REQ_CELOWNIK,
     ACK_CELOWNIK,
-    ACK_BRON
-};
-
-enum SkrzatMessage{
-    REQ_BRON = 10,
+    ACK_BRON,
+    REQ_BRON,
     RELEASE_AGRAFKA,
     RELEASE_CELOWNIK,
 };
 
+std::string MessageText[8] = {
+"REQ_AGRAFKA",
+"ACK_AGRAFKA",
+"REQ_CELOWNIK",
+"ACK_CELOWNIK",
+"ACK_BRON",
+"REQ_BRON",
+"RELEASE_AGRAFKA",
+"RELEASE_CELOWNIK"
+};
 
 
 #endif //COMMON_H

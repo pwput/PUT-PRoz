@@ -9,26 +9,11 @@
 
 using namespace std;
 
-void printVector(std::vector<queueCelownikType> vec){
-    cout<<"vectror c"<<endl;
+void printVector(std::vector<queueItem> vec){
     for (int i = 0; i < vec.size(); ++i) {
-        cout<<vec[i].senderRank<< " "<<vec[i].senderClock<< " "<<vec[i].hasAgrafka<<endl;
+        println("%d %d %d %d",vec[i].senderRank,vec[i].senderClock,vec[i].hasCelownik,vec[i].hasAgrafka);
     }
 }
-void printVector(std::vector<queueAgrafkaType> vec){
-    println("vector A");
-    for (int i = 0; i < vec.size(); ++i) {
-        cout<<vec[i].senderRank<< " "<<vec[i].senderClock<< " "<<vec[i].hasCelownik<<endl;
-    }
-}
-void printVector(std::vector<queueBronType> vec){
-    cout<<"vectror B"<<endl;
-
-    for (int i = 0; i < vec.size(); ++i) {
-        cout<<vec[i].senderRank<< " "<<vec[i].senderClock<<endl;
-    }
-}
-
 void logDebug(string message) {
     if (DEBUG) cout << message << endl;
 }
@@ -42,7 +27,6 @@ void sendPacket(int destination, int tag)
     packet_t response;
     //akualizacja zegara i wypełnienie pól pakietu
     pthread_mutex_lock(&lamportMutex);
-    processData.lamportTime++;
 
     response.lamportTime = processData.lamportTime;
     response.hasAgrafka = processData.hasAgrafka;
@@ -51,7 +35,7 @@ void sendPacket(int destination, int tag)
     pthread_mutex_unlock(&lamportMutex);
 
     // wysłanie ACK
-    if (DEBUG) println("send ACK_%d(time = %d) to rank = %d", tag,response.lamportTime, destination);
+    if (DEBUG) println("send %s(time = %d) to rank = %d", MessageText[tag].c_str(),response.lamportTime,destination);
     MPI_Send( &response, 1, MPI_PACKET_T, destination, tag, MPI_COMM_WORLD);
 }
 

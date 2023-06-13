@@ -61,13 +61,7 @@ void initMessageType(){
 };
 
 void initCommunicationThread(){
-    switch (processData.processType) {
-        case GNOM:
             pthread_create( &communicationTread, NULL, communicationLoop , 0);
-        case SKRZAT:
-            pthread_create( &communicationTread, NULL, communicationLoop, 0);
-
-    }
 }
 
 void check_thread_support(int provided) {

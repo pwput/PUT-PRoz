@@ -11,9 +11,7 @@
 #include <vector>
 
 
-void printVector(std::vector<queueCelownikType> vec);
-void printVector(std::vector<queueAgrafkaType> vec);
-void printVector(std::vector<queueBronType> vec);
+void printVector(std::vector<queueItem> vec);
 void logDebug(std::string message);
 void log(std::string message);
 

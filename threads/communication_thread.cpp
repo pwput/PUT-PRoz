@@ -8,6 +8,7 @@
 #include "../utils.h"
 #include <vector>
 #include <sys/wait.h>
+#include "../data/config.h"
 
 void *communicationLoop(void *ptr) {
     println("comm started")
@@ -16,70 +17,52 @@ void *communicationLoop(void *ptr) {
     while (true) {
         MPI_Recv(&packet, 1, MPI_PACKET_T, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         processData.newLamportTime(packet.lamportTime);
-        switch (processData.processType) {
-            case GNOM:
-                communicationLoopGnom(status, packet);
-            case SKRZAT:
-                communicationLoopSkrzat(status, packet);
-        }
-    }
-};
-
-
-void communicationLoopGnom(MPI_Status status, packet_t packet) {
-    switch (status.MPI_TAG) {
-        case REQ_AGRAFKA: {
-            println("Received REQ_AGRAFKA")
-            sendPacket(status.MPI_SOURCE, ACK_AGRAFKA);
-            break;
-        }
-        case REQ_CELOWNIK: {
-            println("Received REQ_CELOWNIK")
-            sendPacket(status.MPI_SOURCE, ACK_CELOWNIK);
-            break;
-        }
-        case ACK_AGRAFKA: {
-            println("Received ACK_AGRAFKA from %d", status.MPI_SOURCE)
-            queueAgrafkaType n{
-                    status.MPI_SOURCE, packet.lamportTime, processData.hasAgrafka
-            };
-            processData.addToVectorAgrafka(status.MPI_SOURCE, n);
-            if (processData.checkVectorAgrafka()) {
-                println("I can have AGRAFKA")
-                processData.hasAgrafka = true;
-                processData.state = WAITING_CELOWNIK;
-                condVarNotify();
+        switch (status.MPI_TAG) {
+            case REQ_AGRAFKA: {
+                println("Received REQ_AGRAFKA from %d", status.MPI_SOURCE)
+                lockStateMutex();
+                sendPacket(status.MPI_SOURCE, ACK_AGRAFKA);
+                unlockStateMutex();
+                break;
             }
-            break;
-        }
-        case ACK_CELOWNIK: {
-            println("Received ACK_CELOWNIK from %d", status.MPI_SOURCE)
-            queueCelownikType n{
-                    status.MPI_SOURCE, packet.lamportTime, processData.hasCelownik
-            };
-            processData.addToVectorCelownik(status.MPI_SOURCE, n);
-            if (processData.checkVectorCelownik()) {
-                println("I can have CELOWNIK")
-                processData.hasCelownik = true;
-                processData.state = MAKING_BRON;
-                condVarNotify();
+            case REQ_CELOWNIK: {
+                println("Received REQ_CELOWNIK from %d", status.MPI_SOURCE)
+                lockStateMutex();
+                sendPacket(status.MPI_SOURCE, ACK_CELOWNIK);
+                unlockStateMutex();
+                break;
             }
-            break;
-        }
-    }
-}
+            case ACK_AGRAFKA: {
+                println("Received ACK_AGRAFKA from %d", status.MPI_SOURCE)
+                lockStateMutex();
+                queueItem newItem{status.MPI_SOURCE, packet.lamportTime, packet.hasCelownik, packet.hasAgrafka};
+                processData.addToVector(processData.agrafkaQueue, newItem);
+                if (processData.checkVector(processData.agrafkaQueue, AGRAFKI)) {
+                    println("I can have AGRAFKA")
+                    processData.hasAgrafka = true;
+                    processData.state = WAITING_CELOWNIK;
+                    unlockStateMutex();
+                    condVarNotify();
+                }
+                unlockStateMutex();
+                break;
+            }
+            case ACK_CELOWNIK: {
+                println("Received ACK_CELOWNIK from %d", status.MPI_SOURCE)
+                lockStateMutex();
+                queueItem newItem{status.MPI_SOURCE, packet.lamportTime, packet.hasCelownik, packet.hasAgrafka};
+                processData.addToVector(processData.celownikQueue, newItem);
+                if (processData.checkVector(processData.celownikQueue, CELOWNIKI, true)) {
+                    println("I can have CELOWNIK")
+                    processData.hasCelownik = true;
+                    processData.state = MAKING_BRON;
+                    unlockStateMutex();
+                    condVarNotify();
+                }
+                unlockStateMutex();
+                break;
+            }
 
-void communicationLoopSkrzat(MPI_Status status, packet_t packet) {
-    switch (status.MPI_TAG) {
-        case REQ_AGRAFKA: {
-            println("Received REQ_AGRAFKA")
-            sendPacket(status.MPI_SOURCE, ACK_AGRAFKA);
-            break;
-        }
-        case REQ_CELOWNIK: {
-            println("Received REQ_CELOWNIK")
-            sendPacket(status.MPI_SOURCE, ACK_CELOWNIK);
-            break;
         }
     }
 }

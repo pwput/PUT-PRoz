@@ -9,20 +9,20 @@
 #include <vector>
 
 
-struct queueType{
+struct queueItem {
     int senderRank;
     int senderClock;
-};
-
-struct queueAgrafkaType : queueType{
     bool hasCelownik;
-};
-
-struct queueCelownikType : queueType{
     bool hasAgrafka;
+
+    queueItem(int senderRank, int senderClock, bool hasCelownik, bool hasAgrafka) {
+        this->senderRank = senderRank;
+        this->senderClock = senderClock;
+        this->hasCelownik = hasCelownik;
+        this->hasAgrafka = hasAgrafka;
+    }
 };
 
-struct queueBronType: queueType{};
 
 class ProcessData {
 public:
@@ -37,21 +37,24 @@ public:
     bool hasAgrafka;
     bool hasCelownik;
 
-    std::vector<queueAgrafkaType> agrafkaQueue;
-    std::vector<queueCelownikType> celownikQueue;
-    std::vector<queueBronType> bronQueue;
+    std::vector<queueItem> agrafkaQueue;
+    std::vector<queueItem> celownikQueue;
+    std::vector<queueItem> bronQueue;
+
+    queueItem getNewQueueItem();
 
     void init(int rank, int size);
+
     char getProcessTypeLetter();
+
     void newLamportTime(int receivedLamportTime);
+    void incLamportTime();
 
-    void addToVectorAgrafka(int senderRank, queueAgrafkaType item);
-    void addToVectorCelownik(int senderRank, queueCelownikType item);
-    void addToVectorBron(int senderRank, queueBronType item);
+    void addToVector(std::vector<queueItem> &vector, queueItem item);
 
-    bool checkVectorAgrafka();
-    bool checkVectorCelownik();
-    bool checkVectorBron();
+    bool checkVector(std::vector<queueItem> &vector, int limit, bool celownik = false);
+
+    bool isSameProcessType(int senderRank);
 };
 
 
