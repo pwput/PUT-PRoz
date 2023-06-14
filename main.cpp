@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 }
 
 void init(int *argc, char ***argv){
-    logDebug("App initialization start");
+    println("App initialization start");
 
     int provided;
 
@@ -61,7 +61,14 @@ void initMessageType(){
 };
 
 void initCommunicationThread(){
-            pthread_create( &communicationTread, NULL, communicationLoop , 0);
+    switch (processData.processType) {
+        case GNOM:
+            pthread_create( &communicationTread, NULL, communicationLoopGnom , 0);
+            break;
+        case SKRZAT:
+            pthread_create( &communicationTread, NULL, communicationLoopSkrzat , 0);
+            break;
+    }
 }
 
 void check_thread_support(int provided) {

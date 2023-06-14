@@ -14,13 +14,6 @@ void printVector(std::vector<queueItem> vec){
         println("%d %d %d %d",vec[i].senderRank,vec[i].senderClock,vec[i].hasCelownik,vec[i].hasAgrafka);
     }
 }
-void logDebug(string message) {
-    if (DEBUG) cout << message << endl;
-}
-
-void log(string message){
-    cout << message <<endl;
-}
 
 void sendPacket(int destination, int tag)
 {
@@ -35,14 +28,29 @@ void sendPacket(int destination, int tag)
     pthread_mutex_unlock(&lamportMutex);
 
     // wysłanie ACK
-    if (DEBUG) println("send %s(time = %d) to rank = %d", MessageText[tag].c_str(),response.lamportTime,destination);
+    debugln("send %s(time = %d) to rank = %d", MessageText[tag].c_str(),response.lamportTime,destination);
     MPI_Send( &response, 1, MPI_PACKET_T, destination, tag, MPI_COMM_WORLD);
 }
 
-void sendPacketToAll(int tag){
-    for (int i = 0; i < processData.size; ++i) {
-        if (i!=processData.rank)
-            sendPacket(i, tag);
+void sendPacketToAll(int tag , ProcessType type){
+    switch (type){
+        case ProcessType::GNOM:{
+            for (int i = 0; i < GNOMY; ++i) {
+                    sendPacket(i, tag);
+            }
+            break;
+        }
+        case ProcessType::SKRZAT:{
+            for (int i = GNOMY; i < processData.size; ++i) {
+                    sendPacket(i, tag);
+            }
+            break;
+        }
+        case ProcessType::ALL:{
+            for (int i = 0; i < processData.size; ++i) {
+                    sendPacket(i, tag);
+            }
+            break;
+        }
     }
-
 }

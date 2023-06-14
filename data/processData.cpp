@@ -70,7 +70,6 @@ char ProcessData::getProcessTypeLetter() {
         return 'G';
 }
 
-
 bool ProcessData::isSameProcessType(int senderRank) {
     if (rank < GNOMY)
         return (senderRank < GNOM);
@@ -89,21 +88,47 @@ void ProcessData::addToVector(std::vector<queueItem> &vector, queueItem item) {
         vector.push_back(item);
 }
 
-bool ProcessData::checkVector(std::vector<queueItem> &vector, int limit, bool celownik) {
-    if (vector.size() < size) return false;
-    int myPlace = 0;
+bool ProcessData::canIHaveAgrafka(){
+    return canIHave(this->agrafkaReqQueue, this->agrafkaAck,AGRAFKI, GNOMY);
+};
+bool ProcessData::canIHaveCelownik(){
+    return canIHave(this->celownikReqQueue, this->celownikAck,CELOWNIKI,GNOMY, true);
+};
+bool ProcessData::canIHaveBron() {
+    return false;
+};
+
+bool ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> &ackVector,int limit, int neededAck, bool celownik){
+    if (ackVector.size() < neededAck) return false;
+    debugln("I have all answers");
+
     if (celownik)
-        std::sort(vector.begin(), vector.end(), AgrafkaSenderClockRank());
+        std::sort(reqVector.begin(), reqVector.end(), AgrafkaSenderClockRank());
     else
-        std::sort(vector.begin(), vector.end(), SenderClockRank());
-    printVector(vector);
-    for (int i = 0; i < vector.size(); ++i) {
-        if (isSameProcessType(vector[i].senderRank))
-        if (vector[i].senderRank == rank)
-            myPlace = i;
+        std::sort(reqVector.begin(), reqVector.end(), SenderClockRank());
+
+    int myPlaceInReqVector = 0;
+    int myTimeOfRequest = 0;
+    for (int i = 0; i < reqVector.size(); ++i) {
+        if (reqVector[i].senderRank == this->rank){
+            myPlaceInReqVector = i;
+            myTimeOfRequest = reqVector[i].senderClock;
+        }
     }
-    printVector(vector);
-    return (myPlace < limit -     this->existingBronCount);
+
+    printVector(reqVector);
+    debugln("My place in reqVector: %d, of %zu", myPlaceInReqVector, reqVector.size());
+
+    bool areAllAckTimesWorst = true;
+    for (auto ack : ackVector){
+        if (ack.senderClock < myTimeOfRequest)
+            areAllAckTimesWorst = false;
+    }
+    if (!areAllAckTimesWorst) return false;
+
+    debugln("All Revived Ack Times are worst")
+
+    return (myPlaceInReqVector < limit - this->existingBronCount);
 }
 
 void ProcessData::incLamportTime() {

@@ -15,7 +15,13 @@ typedef struct {
 
 enum ProcessType{
     GNOM,
-    SKRZAT
+    SKRZAT,
+    ALL
+};
+
+enum Types{
+    Agrafka,
+
 };
 
 enum State{
@@ -27,14 +33,15 @@ enum State{
 };
 
 enum Message{
-    REQ_AGRAFKA = 0,
+    REQ_AGRAFKA=0,
     ACK_AGRAFKA,
     REQ_CELOWNIK,
     ACK_CELOWNIK,
     ACK_BRON,
     REQ_BRON,
     RELEASE_AGRAFKA,
-    RELEASE_CELOWNIK,
+    RELEASE_CELOWNIK
+    
 };
 
 std::string MessageText[8] = {

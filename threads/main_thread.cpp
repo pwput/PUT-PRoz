@@ -25,9 +25,7 @@ void mainLoopGnom() {
                 println("WAITING_CELOWNIK");
                 lockStateMutex();
                 processData.incLamportTime();
-                auto newItem = queueItem{processData.rank, processData.lamportTime,processData.hasCelownik,processData.hasAgrafka};
-                processData.addToVector(processData.celownikQueue, newItem);
-                sendPacketToAll(REQ_CELOWNIK);
+                sendPacketToAll(REQ_CELOWNIK,ALL);
                 unlockStateMutex();
                 condVarWait();
                 break;
@@ -36,17 +34,18 @@ void mainLoopGnom() {
                 println("WAITING_AGRAFKA");
                 lockStateMutex();
                 processData.incLamportTime();
-                auto newItem = processData.getNewQueueItem();
-                processData.addToVector(processData.agrafkaQueue, newItem);
-                sendPacketToAll(REQ_AGRAFKA);
+                sendPacketToAll(REQ_AGRAFKA,ALL);
                 unlockStateMutex();
                 condVarWait();
                 break;
             }
             case MAKING_BRON: {
                 println("MAKING_BRON");
+                lockStateMutex();
                 sleep(MAKING_TIME);
-                sendPacketToAll(ACK_BRON);
+                sendPacketToAll(RELEASE_AGRAFKA,ALL);
+                sendPacketToAll(RELEASE_CELOWNIK,ALL);
+                unlockStateMutex();
                 condVarWait();
                 break;
             }
@@ -64,15 +63,14 @@ void mainLoopSkrzat() {
                 println("KILLING");
                 lockStateMutex();
                 sleep(KILLING_TIME);
-                sendPacketToAll(RELEASE_AGRAFKA);
-                sendPacketToAll(RELEASE_CELOWNIK);
+                sendPacketToAll(RELEASE_AGRAFKA,ALL);
+                sendPacketToAll(RELEASE_CELOWNIK,ALL);
                 unlockStateMutex();
-
                 break;
             }
             case WAITING_BRON: {
                 println("WAITING_BRON");
-                sendPacketToAll(REQ_BRON);
+                sendPacketToAll(REQ_BRON,ALL);
                 condVarWait();
                 break;
             }

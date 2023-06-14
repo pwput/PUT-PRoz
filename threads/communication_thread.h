@@ -7,10 +7,7 @@
 
 #include "../common.h"
 
-void *communicationLoop(void *ptr);
-
-
-void communicationLoopGnom(MPI_Status status,packet_t packet);
-void communicationLoopSkrzat(MPI_Status status,packet_t packet);
+void *communicationLoopGnom(void *ptr);
+void *communicationLoopSkrzat(void *ptr);
 
 #endif //UNTITLED1_COMMUNICATION_THREAD_H

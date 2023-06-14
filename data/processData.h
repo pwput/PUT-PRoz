@@ -6,6 +6,7 @@
 #define UNTITLED1_DATA_H
 
 #include "../common.h"
+#include "config.h"
 #include <vector>
 
 
@@ -37,9 +38,13 @@ public:
     bool hasAgrafka;
     bool hasCelownik;
 
-    std::vector<queueItem> agrafkaQueue;
-    std::vector<queueItem> celownikQueue;
-    std::vector<queueItem> bronQueue;
+    std::vector<queueItem> agrafkaReqQueue;
+    std::vector<queueItem> celownikReqQueue;
+    std::vector<queueItem> bronReqQueue;
+
+    std::vector<queueItem> agrafkaAck;
+    std::vector<queueItem> celownikAck;
+    std::vector<queueItem> bronAck;
 
     queueItem getNewQueueItem();
 
@@ -47,13 +52,20 @@ public:
 
     char getProcessTypeLetter();
 
+    int countOfProceses(ProcessType type){
+        switch (type) {
+            case ProcessType::GNOM: return GNOMY;
+            case ProcessType::SKRZAT: return size - GNOM;
+        }
+    };
     void newLamportTime(int receivedLamportTime);
     void incLamportTime();
-
     void addToVector(std::vector<queueItem> &vector, queueItem item);
-
-    bool checkVector(std::vector<queueItem> &vector, int limit, bool celownik = false);
-
+    bool canIHaveAgrafka();
+    bool canIHaveCelownik();
+    bool canIHaveBron();
+private:
+    bool canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> &ackVector,int limit, int neededAck, bool celownik = false);
     bool isSameProcessType(int senderRank);
 };
 
