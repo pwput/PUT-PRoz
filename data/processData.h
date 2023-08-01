@@ -30,7 +30,6 @@ public:
     ProcessType processType;
     State state;
 
-    int existingBronCount;
     int rank;
     int size;
     int lamportTime;
@@ -52,21 +51,14 @@ public:
 
     char getProcessTypeLetter();
 
-    int countOfProceses(ProcessType type){
-        switch (type) {
-            case ProcessType::GNOM: return GNOMY;
-            case ProcessType::SKRZAT: return size - GNOM;
-        }
-    };
+
     void newLamportTime(int receivedLamportTime);
     void incLamportTime();
     void addToVector(std::vector<queueItem> &vector, queueItem item);
     bool canIHaveAgrafka();
     bool canIHaveCelownik();
-    bool canIHaveBron();
 private:
     bool canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> &ackVector,int limit, int neededAck, bool celownik = false);
-    bool isSameProcessType(int senderRank);
 };
 
 

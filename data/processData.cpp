@@ -39,8 +39,7 @@ struct AgrafkaSenderClockRank {
 void ProcessData::init(int rank, int size) {
     this->rank = rank;
     this->size = size;
-    this->existingBronCount = 0;
-    if (rank < GNOMY) {
+    if (rank < SKRZATY) {
         this->processType = GNOM;
         this->state = WAITING_AGRAFKA;
     } else {
@@ -70,12 +69,6 @@ char ProcessData::getProcessTypeLetter() {
         return 'G';
 }
 
-bool ProcessData::isSameProcessType(int senderRank) {
-    if (rank < GNOMY)
-        return (senderRank < GNOM);
-    else return (senderRank >= GNOMY);
-}
-
 void ProcessData::addToVector(std::vector<queueItem> &vector, queueItem item) {
     bool added = false;
     for (int i = 0; i < vector.size(); ++i) {
@@ -89,13 +82,10 @@ void ProcessData::addToVector(std::vector<queueItem> &vector, queueItem item) {
 }
 
 bool ProcessData::canIHaveAgrafka(){
-    return canIHave(this->agrafkaReqQueue, this->agrafkaAck,AGRAFKI, GNOMY);
+    return canIHave(this->agrafkaReqQueue, this->agrafkaAck, AGRAFKI, SKRZATY);
 };
 bool ProcessData::canIHaveCelownik(){
-    return canIHave(this->celownikReqQueue, this->celownikAck,CELOWNIKI,GNOMY, true);
-};
-bool ProcessData::canIHaveBron() {
-    return false;
+    return canIHave(this->celownikReqQueue, this->celownikAck, CELOWNIKI, SKRZATY, true);
 };
 
 bool ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> &ackVector,int limit, int neededAck, bool celownik){
@@ -128,7 +118,7 @@ bool ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueI
 
     debugln("All Revived Ack Times are worst")
 
-    return (myPlaceInReqVector < limit - this->existingBronCount);
+    return (myPlaceInReqVector < limit );
 }
 
 void ProcessData::incLamportTime() {

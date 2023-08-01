@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void init(int *argc, char ***argv){
+void init(int *argc, char ***argv) {
     println("App initialization start");
 
     int provided;
@@ -46,10 +46,10 @@ void init(int *argc, char ***argv){
     println("App initialization complete");
 }
 
-void initMessageType(){
+void initMessageType() {
     const int nItems = 3;
-    int blockLengths[nItems] = { 1, 1, 1};
-    MPI_Datatype types[nItems] = { MPI_INT, MPI_C_BOOL, MPI_C_BOOL };
+    int blockLengths[nItems] = {1, 1, 1};
+    MPI_Datatype types[nItems] = {MPI_INT, MPI_C_BOOL, MPI_C_BOOL};
 
     MPI_Aint offsets[nItems];
     offsets[0] = offsetof(packet_t, lamportTime);
@@ -60,15 +60,8 @@ void initMessageType(){
     MPI_Type_commit(&MPI_PACKET_T);
 };
 
-void initCommunicationThread(){
-    switch (processData.processType) {
-        case GNOM:
-            pthread_create( &communicationTread, NULL, communicationLoopGnom , 0);
-            break;
-        case SKRZAT:
-            pthread_create( &communicationTread, NULL, communicationLoopSkrzat , 0);
-            break;
-    }
+void initCommunicationThread() {
+    pthread_create(&communicationTread, NULL, communicationLoop, 0);
 }
 
 void check_thread_support(int provided) {
@@ -93,15 +86,17 @@ void check_thread_support(int provided) {
     }
 }
 
-void finalize(){
+void finalize() {
     pthread_join(communicationTread, NULL);
     MPI_Type_free(&MPI_PACKET_T);
     MPI_Finalize();
 }
-void lockStateMutex(){
+
+void lockStateMutex() {
     pthread_mutex_lock(&stateMutex);
 };
-void unlockStateMutex(){
+
+void unlockStateMutex() {
     pthread_mutex_unlock(&stateMutex);
 }
 

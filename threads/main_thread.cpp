@@ -10,15 +10,6 @@
 
 
 void mainLoop() {
-    switch (processData.processType) {
-        case GNOM:
-            mainLoopGnom();
-        case SKRZAT:
-            mainLoopSkrzat();
-    }
-}
-
-void mainLoopGnom() {
     while (true) {
         switch (processData.state) {
             case WAITING_CELOWNIK: {
@@ -53,29 +44,31 @@ void mainLoopGnom() {
                 println("UNSUPORTEDD State");
         }
     }
-
 }
 
-void mainLoopSkrzat() {
-    while (true) {
-        switch (processData.state) {
-            case KILLING: {
-                println("KILLING");
-                lockStateMutex();
-                sleep(KILLING_TIME);
-                sendPacketToAll(RELEASE_AGRAFKA,ALL);
-                sendPacketToAll(RELEASE_CELOWNIK,ALL);
-                unlockStateMutex();
-                break;
-            }
-            case WAITING_BRON: {
-                println("WAITING_BRON");
-                sendPacketToAll(REQ_BRON,ALL);
-                condVarWait();
-                break;
-            }
-            default:
-                println("UNSUPORTEDD State");
-        }
-    }
+void mainLoopGnom() {
 }
+
+//void mainLoopSkrzat() {
+//    while (true) {
+//        switch (processData.state) {
+//            case KILLING: {
+//                println("KILLING");
+//                lockStateMutex();
+//                sleep(KILLING_TIME);
+//                sendPacketToAll(RELEASE_AGRAFKA,ALL);
+//                sendPacketToAll(RELEASE_CELOWNIK,ALL);
+//                unlockStateMutex();
+//                break;
+//            }
+//            case WAITING_BRON: {
+//                println("WAITING_BRON");
+//                sendPacketToAll(REQ_BRON,ALL);
+//                condVarWait();
+//                break;
+//            }
+//            default:
+//                println("UNSUPORTEDD State");
+//        }
+//    }
+//}

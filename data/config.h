@@ -5,7 +5,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define GNOMY 5 //liczba gnomow
+#define SKRZATY 5 //liczba gnomow
 
 #define AGRAFKI 3 //liczba agrafek
 #define CELOWNIKI 2//liczba celownikow

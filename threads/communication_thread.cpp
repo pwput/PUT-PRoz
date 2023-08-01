@@ -10,7 +10,7 @@
 #include <sys/wait.h>
 #include "../data/config.h"
 
-void *communicationLoopGnom(void *ptr) {
+void *communicationLoop(void *ptr) {
     println("comm started")
     MPI_Status status;
     packet_t packet;
@@ -56,32 +56,6 @@ void *communicationLoopGnom(void *ptr) {
                 lockStateMutex();
                 queueItem newItem{status.MPI_SOURCE, packet.lamportTime, packet.hasCelownik, packet.hasAgrafka};
                 processData.addToVector(processData.celownikAck , newItem);
-                if (processData.canIHaveCelownik()) {
-                    println("I can have CELOWNIK")
-                    processData.hasCelownik = true;
-                    processData.state = MAKING_BRON;
-                    unlockStateMutex();
-                    condVarNotify();
-                }
-                unlockStateMutex();
-                break;
-            }
-        }
-    }
-}
-
-void *communicationLoopSkrzat(void *ptr) {
-    println("comm started")
-    MPI_Status status;
-    packet_t packet;
-    while (true) {
-        MPI_Recv(&packet, 1, MPI_PACKET_T, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-        processData.newLamportTime(packet.lamportTime);
-        switch (status.MPI_TAG) {
-            case REQ_BRON: {
-                println("Received ACK_CELOWNIK from %d time %d", status.MPI_SOURCE,packet.lamportTime)
-                lockStateMutex();
-                //delete otrzymane
                 if (processData.canIHaveCelownik()) {
                     println("I can have CELOWNIK")
                     processData.hasCelownik = true;

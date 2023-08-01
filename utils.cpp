@@ -35,13 +35,13 @@ void sendPacket(int destination, int tag)
 void sendPacketToAll(int tag , ProcessType type){
     switch (type){
         case ProcessType::GNOM:{
-            for (int i = 0; i < GNOMY; ++i) {
+            for (int i = 0; i < SKRZATY; ++i) {
                     sendPacket(i, tag);
             }
             break;
         }
         case ProcessType::SKRZAT:{
-            for (int i = GNOMY; i < processData.size; ++i) {
+            for (int i = SKRZATY; i < processData.size; ++i) {
                     sendPacket(i, tag);
             }
             break;

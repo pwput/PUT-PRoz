@@ -7,7 +7,6 @@
 
 #include "../common.h"
 
-void *communicationLoopGnom(void *ptr);
-void *communicationLoopSkrzat(void *ptr);
+void *communicationLoop(void *ptr);
 
 #endif //UNTITLED1_COMMUNICATION_THREAD_H

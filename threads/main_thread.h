@@ -7,7 +7,6 @@
 
 
 void mainLoop();
-void mainLoopGnom();
-void mainLoopSkrzat();
+
 
 #endif //MAIN_THREAD_H
