@@ -16,7 +16,7 @@ void mainLoop() {
                 println("WAITING_CELOWNIK");
                 lockStateMutex();
                 processData.incLamportTime();
-                sendPacketToAll(REQ_CELOWNIK,ALL);
+                sendPacketToAll(REQ_CELOWNIK);
                 unlockStateMutex();
                 condVarWait();
                 break;
@@ -25,7 +25,7 @@ void mainLoop() {
                 println("WAITING_AGRAFKA");
                 lockStateMutex();
                 processData.incLamportTime();
-                sendPacketToAll(REQ_AGRAFKA,ALL);
+                sendPacketToAll(REQ_AGRAFKA);
                 unlockStateMutex();
                 condVarWait();
                 break;
@@ -33,11 +33,9 @@ void mainLoop() {
             case MAKING_BRON: {
                 println("MAKING_BRON");
                 lockStateMutex();
-                sleep(MAKING_TIME);
-                sendPacketToAll(RELEASE_AGRAFKA,ALL);
-                sendPacketToAll(RELEASE_CELOWNIK,ALL);
+                sleep(MAKING_AND_KILLING_TIME);
+                sendPacketToAll(RELEASE);
                 unlockStateMutex();
-                condVarWait();
                 break;
             }
             default:

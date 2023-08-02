@@ -10,7 +10,7 @@
 #define AGRAFKI 3 //liczba agrafek
 #define CELOWNIKI 2//liczba celownikow
 
-#define MAKING_TIME 10 // czas potrzebny na stworzenie broni
+#define MAKING_AND_KILLING_TIME 10 // czas potrzebny na stworzenie broni
 #define KILLING_TIME 10 //czas potrzebny na zabicie szczura
 
 #endif //CONFIG_H

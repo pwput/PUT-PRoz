@@ -39,13 +39,7 @@ struct AgrafkaSenderClockRank {
 void ProcessData::init(int rank, int size) {
     this->rank = rank;
     this->size = size;
-    if (rank < SKRZATY) {
-        this->processType = GNOM;
-        this->state = WAITING_AGRAFKA;
-    } else {
-        this->processType = SKRZAT;
-        this->state = WAITING_BRON;
-    }
+    this->state = WAITING_AGRAFKA;
 
     this->lamportTime = 0;
 
@@ -62,13 +56,6 @@ void ProcessData::newLamportTime(int receivedLamportTime) {
     pthread_mutex_unlock(&lamportMutex);
 }
 
-char ProcessData::getProcessTypeLetter() {
-    if (this->processType == SKRZAT)
-        return 'S';
-    else
-        return 'G';
-}
-
 void ProcessData::addToVector(std::vector<queueItem> &vector, queueItem item) {
     bool added = false;
     for (int i = 0; i < vector.size(); ++i) {
@@ -80,6 +67,22 @@ void ProcessData::addToVector(std::vector<queueItem> &vector, queueItem item) {
     if (!added)
         vector.push_back(item);
 }
+
+void ProcessData::removeFromVector(std::vector<queueItem> &vector, int rank){
+    int vectorIndex;
+    bool found = false;
+    for (int i = 0; i < vector.size(); ++i) {
+        if (vector[i].senderRank == rank) {
+            vectorIndex = i;
+            found = true;
+        }
+    }
+    if (found){
+        vector.erase(vector.begin() + vectorIndex);
+    }
+
+}
+
 
 bool ProcessData::canIHaveAgrafka(){
     return canIHave(this->agrafkaReqQueue, this->agrafkaAck, AGRAFKI, SKRZATY);

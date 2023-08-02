@@ -17,6 +17,6 @@ void log(std::string message);
 
 /* wysyłanie pakietu, skrót: wskaźnik do pakietu (0 oznacza stwórz pusty pakiet), do kogo, z jakim typem */
 void sendPacket(int destination, int tag);
-void sendPacketToAll(int tag , ProcessType type);
+void sendPacketToAll(int tag);
 
 #endif //UNTITLED1_UTILS_H

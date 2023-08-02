@@ -66,6 +66,11 @@ void *communicationLoop(void *ptr) {
                 unlockStateMutex();
                 break;
             }
+            case RELEASE:{
+                println("Received ACK_CELOWNIK from %d time %d", status.MPI_SOURCE,packet.lamportTime)
+                lockStateMutex();
+                processData.removeFromVector(processData.agrafkaReqQueue,status.MPI_SOURCE);
+            }
         }
     }
 }

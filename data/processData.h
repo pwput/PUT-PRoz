@@ -27,7 +27,6 @@ struct queueItem {
 
 class ProcessData {
 public:
-    ProcessType processType;
     State state;
 
     int rank;
@@ -39,11 +38,9 @@ public:
 
     std::vector<queueItem> agrafkaReqQueue;
     std::vector<queueItem> celownikReqQueue;
-    std::vector<queueItem> bronReqQueue;
 
     std::vector<queueItem> agrafkaAck;
     std::vector<queueItem> celownikAck;
-    std::vector<queueItem> bronAck;
 
     queueItem getNewQueueItem();
 
@@ -55,6 +52,7 @@ public:
     void newLamportTime(int receivedLamportTime);
     void incLamportTime();
     void addToVector(std::vector<queueItem> &vector, queueItem item);
+    void removeFromVector(std::vector<queueItem> &vector, int rank);
     bool canIHaveAgrafka();
     bool canIHaveCelownik();
 private:
