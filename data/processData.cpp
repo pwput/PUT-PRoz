@@ -17,12 +17,6 @@ struct SenderClockRank {
     }
 };
 
-
-queueItem ProcessData::getNewQueueItem(
-) {
-    return {rank, lamportTime, hasCelownik, hasAgrafka};
-}
-
 struct AgrafkaSenderClockRank {
     inline bool operator()(const queueItem &struct1, const queueItem &struct2) {
         if (struct1.hasAgrafka && !struct2.hasAgrafka)
@@ -85,15 +79,15 @@ void ProcessData::removeFromVector(std::vector<queueItem> &vector, int rank){
 
 
 bool ProcessData::canIHaveAgrafka(){
-    return canIHave(this->agrafkaReqQueue, this->agrafkaAck, AGRAFKI, SKRZATY);
+    return canIHave(this->agrafkaReqQueue, this->agrafkaAck, AGRAFKI, size);
 };
 bool ProcessData::canIHaveCelownik(){
-    return canIHave(this->celownikReqQueue, this->celownikAck, CELOWNIKI, SKRZATY, true);
+    return canIHave(this->celownikReqQueue, this->celownikAck, CELOWNIKI, size, true);
 };
 
 bool ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> &ackVector,int limit, int neededAck, bool celownik){
     if (ackVector.size() < neededAck) return false;
-    debugln("I have all answers");
+    debugln("I have all answers,%d",ackVector.size() );
 
     if (celownik)
         std::sort(reqVector.begin(), reqVector.end(), AgrafkaSenderClockRank());
@@ -110,7 +104,6 @@ bool ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueI
     }
 
     printVector(reqVector);
-    debugln("My place in reqVector: %d, of %zu", myPlaceInReqVector, reqVector.size());
 
     bool areAllAckTimesWorst = true;
     for (auto ack : ackVector){
@@ -121,7 +114,13 @@ bool ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueI
 
     debugln("All Revived Ack Times are worst")
 
-    return (myPlaceInReqVector < limit );
+    debugln("My place in reqVector: %d, of %zu", myPlaceInReqVector, reqVector.size());
+    if (myPlaceInReqVector < limit ){
+        ackVector.clear();
+        return true;
+    }else{
+        return false;
+    }
 }
 
 void ProcessData::incLamportTime() {

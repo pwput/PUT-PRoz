@@ -31,11 +31,12 @@ void mainLoop() {
                 break;
             }
             case MAKING_BRON: {
-                println("MAKING_BRON");
+                println("MAKING_BRON_AND_KILLING_RAT");
                 lockStateMutex();
                 sleep(MAKING_AND_KILLING_TIME);
                 sendPacketToAll(RELEASE);
                 unlockStateMutex();
+                condVarWait();
                 break;
             }
             default:
@@ -43,30 +44,3 @@ void mainLoop() {
         }
     }
 }
-
-void mainLoopGnom() {
-}
-
-//void mainLoopSkrzat() {
-//    while (true) {
-//        switch (processData.state) {
-//            case KILLING: {
-//                println("KILLING");
-//                lockStateMutex();
-//                sleep(KILLING_TIME);
-//                sendPacketToAll(RELEASE_AGRAFKA,ALL);
-//                sendPacketToAll(RELEASE_CELOWNIK,ALL);
-//                unlockStateMutex();
-//                break;
-//            }
-//            case WAITING_BRON: {
-//                println("WAITING_BRON");
-//                sendPacketToAll(REQ_BRON,ALL);
-//                condVarWait();
-//                break;
-//            }
-//            default:
-//                println("UNSUPORTEDD State");
-//        }
-//    }
-//}

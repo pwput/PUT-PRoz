@@ -67,9 +67,18 @@ void *communicationLoop(void *ptr) {
                 break;
             }
             case RELEASE:{
-                println("Received ACK_CELOWNIK from %d time %d", status.MPI_SOURCE,packet.lamportTime)
+                println("Received RELEASE from %d time %d", status.MPI_SOURCE,packet.lamportTime)
                 lockStateMutex();
                 processData.removeFromVector(processData.agrafkaReqQueue,status.MPI_SOURCE);
+                processData.removeFromVector(processData.celownikReqQueue,status.MPI_SOURCE);
+                if (status.MPI_SOURCE == processData.rank){
+                    processData.hasCelownik = false;
+                    processData.hasAgrafka = false;
+                    processData.state = WAITING_AGRAFKA;
+                    condVarNotify();
+                }
+                unlockStateMutex();
+                break;
             }
         }
     }

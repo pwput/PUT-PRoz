@@ -5,13 +5,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define SKRZATY 5 //liczba gnomow
-
 #define AGRAFKI 3 //liczba agrafek
 #define CELOWNIKI 2//liczba celownikow
 
-#define MAKING_AND_KILLING_TIME 10 // czas potrzebny na stworzenie broni
-#define KILLING_TIME 10 //czas potrzebny na zabicie szczura
+#define MAKING_AND_KILLING_TIME 0 // czas potrzebny na stworzenie broni
 
 #endif //CONFIG_H
 
