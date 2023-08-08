@@ -7,11 +7,12 @@
 #include <mpi.h>
 #include <pthread.h>
 
-#define println(FORMAT, ...) printf("%c[%d;%dm[r:%d,t:%d]: " FORMAT "%c[%d;%dm\n",  27, (1+(processData.rank/7))%2, 31+(6+processData.rank)%7, \
-processData.rank, processData.lamportTime,  ##__VA_ARGS__, 27,0,37);
+#define println(FORMAT, ...) printf("%c[%d;%dm[%d] [t:%d]: " FORMAT "\n",  27, (1+(processData.rank/7))%2, 31+(6+processData.rank)%7, \
+processData.rank, processData.lamportTime,  ##__VA_ARGS__);
 
-#define debugln(FORMAT, ...)  if (DEBUG) printf("%c[%d;%dm[r:%d,t:%d: " FORMAT "%c[%d;%dm\n",  27, (1+(processData.rank/7))%2, 31+(6+processData.rank)%7, \
-processData.rank, processData.lamportTime, ##__VA_ARGS__, 27,0,37);
+#define debugln(FORMAT, ...)  if (DEBUG) printf("%c[%d;%dm[%d] [t:%d]: " FORMAT "\n",  27, (1+(processData.rank/7))%2, 31+(6+processData.rank)%7, \
+processData.rank, processData.lamportTime, ##__VA_ARGS__);
+
 extern ProcessData processData;
 
 extern pthread_mutex_t lamportMutex;
