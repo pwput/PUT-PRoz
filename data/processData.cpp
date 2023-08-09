@@ -62,7 +62,7 @@ void ProcessData::addToVector(std::vector<queueItem> &vector, queueItem item) {
         vector.push_back(item);
 }
 
-void ProcessData::removeFromVector(std::vector<queueItem> &vector, int rank){
+void ProcessData::removeFromVector(std::vector<queueItem> &vector, int rank) {
     int vectorIndex;
     bool found = false;
     for (int i = 0; i < vector.size(); ++i) {
@@ -71,23 +71,26 @@ void ProcessData::removeFromVector(std::vector<queueItem> &vector, int rank){
             found = true;
         }
     }
-    if (found){
+    if (found) {
         vector.erase(vector.begin() + vectorIndex);
     }
 
 }
 
 
-bool ProcessData::canIHaveAgrafka(){
+bool ProcessData::canIHaveAgrafka() {
     return canIHave(this->agrafkaReqQueue, this->agrafkaAck, AGRAFKI, size);
 };
-bool ProcessData::canIHaveCelownik(){
+
+bool ProcessData::canIHaveCelownik() {
     return canIHave(this->celownikReqQueue, this->celownikAck, CELOWNIKI, size, true);
 };
 
-bool ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> &ackVector,int limit, int neededAck, bool celownik){
+bool
+ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> &ackVector, int limit, int neededAck,
+                      bool celownik) {
     if (ackVector.size() < neededAck) return false;
-    debugln("I have all answers,%d",ackVector.size() );
+    debugln("I have all answers,%d", ackVector.size());
 
     if (celownik)
         std::sort(reqVector.begin(), reqVector.end(), AgrafkaSenderClockRank());
@@ -97,34 +100,35 @@ bool ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueI
     int myPlaceInReqVector = 0;
     int myTimeOfRequest = 0;
     for (int i = 0; i < reqVector.size(); ++i) {
-        if (reqVector[i].senderRank == this->rank){
+        if (reqVector[i].senderRank == this->rank) {
             myPlaceInReqVector = i;
             myTimeOfRequest = reqVector[i].senderClock;
         }
     }
+        debugln("ReqVector for celownik: %b",celownik);
 
-    printVector(reqVector);
+        printVector(reqVector);
 
-    bool areAllAckTimesWorst = true;
-    for (auto ack : ackVector){
-        if (ack.senderClock < myTimeOfRequest)
-            areAllAckTimesWorst = false;
+        bool areAllAckTimesWorst = true;
+        for (auto ack: ackVector) {
+            if (ack.senderClock < myTimeOfRequest)
+                areAllAckTimesWorst = false;
+        }
+        if (!areAllAckTimesWorst) return false;
+
+        debugln("All Revived Ack Times are worst")
+
+        debugln("My place in reqVector: %d, of %zu", myPlaceInReqVector, reqVector.size());
+        if (myPlaceInReqVector < limit) {
+            ackVector.clear();
+            return true;
+        } else {
+            return false;
+        }
     }
-    if (!areAllAckTimesWorst) return false;
 
-    debugln("All Revived Ack Times are worst")
-
-    debugln("My place in reqVector: %d, of %zu", myPlaceInReqVector, reqVector.size());
-    if (myPlaceInReqVector < limit ){
-        ackVector.clear();
-        return true;
-    }else{
-        return false;
+    void ProcessData::incLamportTime() {
+        pthread_mutex_lock(&lamportMutex);
+        this->lamportTime++;
+        pthread_mutex_unlock(&lamportMutex);
     }
-}
-
-void ProcessData::incLamportTime() {
-    pthread_mutex_lock(&lamportMutex);
-    this->lamportTime ++;
-    pthread_mutex_unlock(&lamportMutex);
-}

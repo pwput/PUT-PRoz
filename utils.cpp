@@ -11,13 +11,13 @@ using namespace std;
 
 void printVector(std::vector<queueItem> vec) {
     for (int i = 0; i < vec.size(); ++i) {
-        println("%d %d %d %d", vec[i].senderRank, vec[i].senderClock, vec[i].hasCelownik, vec[i].hasAgrafka);
+        println("r:%d c:%d ha:%d hc:%d", vec[i].senderRank, vec[i].senderClock, vec[i].hasAgrafka, vec[i].hasCelownik);
     }
 }
 
 void sendPacket(int destination, int tag) {
     packet_t response;
-    //akualizacja zegara i wypełnienie pól pakietu
+    //actualization zegara i wypełnienie pól pakietu
     pthread_mutex_lock(&lamportMutex);
 
     response.lamportTime = processData.lamportTime;
@@ -27,7 +27,7 @@ void sendPacket(int destination, int tag) {
     pthread_mutex_unlock(&lamportMutex);
 
     // wysłanie ACK
-    debugln("send %s(time = %d) to rank = %d", MessageText[tag].c_str(), response.lamportTime, destination);
+    debugln("send %s(t:%d, ha:%d, hc:%d) to rank = %d", MessageText[tag].c_str(), response.lamportTime, response.hasAgrafka,response.hasCelownik, destination);
     MPI_Send(&response, 1, MPI_PACKET_T, destination, tag, MPI_COMM_WORLD);
 }
 
