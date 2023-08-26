@@ -11,7 +11,7 @@ using namespace std;
 
 void printVector(std::vector<queueItem> vec) {
     for (int i = 0; i < vec.size(); ++i) {
-        println("r:%d c:%d ha:%d hc:%d", vec[i].senderRank, vec[i].senderClock, vec[i].hasAgrafka, vec[i].hasCelownik);
+  //      println("r:%d c:%d ha:%d hc:%d", vec[i].senderRank, vec[i].senderClock, vec[i].hasAgrafka, vec[i].hasCelownik);
     }
 }
 
@@ -27,7 +27,7 @@ void sendPacket(int destination, int tag) {
     pthread_mutex_unlock(&lamportMutex);
 
     // wysłanie ACK
-    debugln("send %s(t:%d, ha:%d, hc:%d) to rank = %d", MessageText[tag].c_str(), response.lamportTime, response.hasAgrafka,response.hasCelownik, destination);
+  //  debugln("send %s(t:%d, ha:%d, hc:%d) to rank = %d", MessageText[tag].c_str(), response.lamportTime, response.hasAgrafka,response.hasCelownik, destination);
     MPI_Send(&response, 1, MPI_PACKET_T, destination, tag, MPI_COMM_WORLD);
 }
 

@@ -90,7 +90,7 @@ bool
 ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> &ackVector, int limit, int neededAck,
                       bool celownik) {
     if (ackVector.size() < neededAck) return false;
-    debugln("I have all answers,%d", ackVector.size());
+//    debugln("I have all answers,%d", ackVector.size());
 
     if (celownik)
         std::sort(reqVector.begin(), reqVector.end(), AgrafkaSenderClockRank());
@@ -105,7 +105,7 @@ ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> 
             myTimeOfRequest = reqVector[i].senderClock;
         }
     }
-        debugln("ReqVector for celownik: %b",celownik);
+  //      debugln("ReqVector for celownik: %b",celownik);
 
         printVector(reqVector);
 
@@ -116,9 +116,9 @@ ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> 
         }
         if (!areAllAckTimesWorst) return false;
 
-        debugln("All Revived Ack Times are worst")
+       // debugln("All Revived Ack Times are worst")
 
-        debugln("My place in reqVector: %d, of %zu", myPlaceInReqVector, reqVector.size());
+     //   debugln("My place in reqVector: %d, of %zu", myPlaceInReqVector, reqVector.size());
         if (myPlaceInReqVector < limit) {
             ackVector.clear();
             return true;

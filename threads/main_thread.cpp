@@ -35,7 +35,9 @@ void mainLoop() {
                 lockStateMutex();
                 sleep(MAKING_AND_KILLING_TIME);
                 sendPacketToAll(RELEASE);
-                processData.state=WAITING_CELOWNIK;
+                //processData.state=WAITING_CELOWNIK;
+                processData.hasAgrafka=true;
+                processData.hasCelownik=true;
                 unlockStateMutex();
                 condVarWait();
                 break;

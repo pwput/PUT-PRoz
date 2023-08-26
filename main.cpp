@@ -93,7 +93,7 @@ void finalize() {
 }
 
 void lockStateMutex() {
-    pthread_mutex_lock(&stateMutex);
+    pthread_mutex_trylock(&stateMutex);
 };
 
 void unlockStateMutex() {

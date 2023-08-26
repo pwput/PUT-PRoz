@@ -10,7 +10,7 @@ all:
 	make run
 
 main:
-	mpic++ ./main.cpp -o main
+	mpic++ ./main.cpp -o main -g
 
 clear: clean
 
@@ -18,7 +18,7 @@ clean:
 	rm -f main
 
 run: main
-	mpirun -oversubscribe -np 8 ./main
+	mpirun -oversubscribe -np 6 ./main
 
 
 

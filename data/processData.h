@@ -11,7 +11,7 @@
 
 
 struct queueItem {
-    int senderRank;
+int senderRank;
     int senderClock;
     bool hasCelownik;
     bool hasAgrafka;
