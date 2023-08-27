@@ -31,6 +31,8 @@ void initCommunicationThread(); //inicjalizuje watek komunikacyjny i typ
 void lockStateMutex();
 void unlockStateMutex();
 int condVarWait() ;
+int semafVarWait();
+int semaVarPost();
 int condVarNotify() ;
 
 #endif

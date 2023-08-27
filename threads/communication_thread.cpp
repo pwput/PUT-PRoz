@@ -50,6 +50,7 @@ void *communicationLoop(void *ptr) {
                 cont=false;
                 queueItem newItem{status.MPI_SOURCE, packet.lamportTime, packet.hasCelownik, packet.hasAgrafka};
                 processData.addToVector(processData.agrafkaAck, newItem);
+            
                 if (processData.canIHaveAgrafka()) {
               //      println("I can have AGRAFKA")
                     processData.hasAgrafka = true;
@@ -110,4 +111,5 @@ void *communicationLoop(void *ptr) {
             }
         }
     }
+            sleep(1 + rand() % 5);
 }

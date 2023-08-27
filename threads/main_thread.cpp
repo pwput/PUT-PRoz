@@ -46,4 +46,5 @@ void mainLoop() {
                 println("UNSUPORTEDD State");
         }
     }
+            sleep(1 + rand() % 10);
 }

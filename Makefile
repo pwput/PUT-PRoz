@@ -18,7 +18,7 @@ clean:
 	rm -f main
 
 run: main
-	mpirun -oversubscribe -np 6 ./main
+	mpirun -oversubscribe -np 50 ./main
 
 
 

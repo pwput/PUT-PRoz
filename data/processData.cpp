@@ -102,7 +102,10 @@ ProcessData::canIHave(std::vector<queueItem> &reqVector, std::vector<queueItem> 
     for (int i = 0; i < reqVector.size(); ++i) {
         if (reqVector[i].senderRank == this->rank) {
             myPlaceInReqVector = i;
+            lockStateMutex();
+
             myTimeOfRequest = reqVector[i].senderClock;
+            unlockStateMutex();
         }
     }
   //      debugln("ReqVector for celownik: %b",celownik);
